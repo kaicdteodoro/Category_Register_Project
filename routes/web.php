@@ -13,4 +13,7 @@
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('home');
+
+Route::resource('categories','CategoryController',['as'=>'']);
+Route::resource('products','ProductController',['as'=>'']);

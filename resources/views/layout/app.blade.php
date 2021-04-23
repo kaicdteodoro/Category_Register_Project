@@ -5,11 +5,26 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{csrf_token()}}">
+    <style>
+        table{
+            margin-bottom: 20px;
+        }
+        body{
+            padding: 20px;
+        }
+
+        .navbar{
+            margin-bottom: 20px;
+        }
+    </style>
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
     <title>Document</title>
 </head>
 <body>
 <div class="container">
+    @component('layout.components.nav-bar')
+    @endcomponent
     <main role="main">
         @hasSection('body')
             @yield('body')
