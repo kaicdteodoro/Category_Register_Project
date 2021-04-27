@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -84,5 +85,9 @@ class CategoryController extends Controller
     {
         Category::find($id)->delete();
         return $this->index();
+    }
+
+    public function indexJson(){
+        return json_encode(DB::table('categories')->select('name','id')->orderBy('name')->get());
     }
 }

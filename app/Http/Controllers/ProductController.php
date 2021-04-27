@@ -15,21 +15,16 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    private function getCategories()
-    {
-        return DB::table('categories')->select('id','name')->get();
-    }
 
     public function index()
     {
+        return json_encode(Product::all());
+    }
+
+    public function indexView()
+    {
         return view(
             'product.index'
-        )->with(
-            'prod',
-            Product::all()
-        )->with(
-            'cats',
-            $this->getCategories()
         );
     }
 
@@ -40,7 +35,6 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('product.new')->with('cats', $this->getCategories());
     }
 
     /**
@@ -51,15 +45,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        Product::create(
+        $prod = Product::create(
             [
-                'name' => $request->nameProduct,
-                'stock' => $request->stockProduct,
-                'price' => $request->priceProduct,
-                'category_id' => $request->catProduct
+                'name' => $request->input('name'),
+                'stock' => $request->input('stock'),
+                'price' => $request->input('price'),
+                'category_id' => $request->input('category_id')
             ]
         );
-        return $this->index();
+        return json_encode($prod);
     }
 
     /**
@@ -70,7 +64,11 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $prod = Product::find($id);
+        if ($prod) {
+            return json_encode($prod);
+        }
+        return response('Error', 404);
     }
 
     /**
@@ -81,16 +79,7 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        return view(
-            'product.update'
-        )->with(
-            'prod',
-            Product::find($id)
-        )->with(
-            'cats',
-            $this->getCategories()
-
-        );
+        //
     }
 
     /**
@@ -102,19 +91,22 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Product::find($id)->fill(
-            [
-                'name' =>
-                    $request->nameProduct,
-                'stock' =>
-                    $request->stockProduct,
-                'price' =>
-                    $request->priceProduct,
-                'category_id' =>
-                    $request->catProduct
-            ]
-        )->save();
-        return $this->index();
+        $prod = Product::find($id);
+        if ($prod) {
+            $prod->fill(
+                [
+                    'name' => $request->input('name'),
+                    'stock' => $request->input('stock'),
+                    'price' => $request->input('price'),
+                    'category_id' => $request->input('category_id')
+                ]
+            )->save();
+            return json_encode($prod);
+        }
+       return response(
+            'Deu errado issoae manin',
+            404
+        );
     }
 
     /**
@@ -125,7 +117,10 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        Product::find($id)->delete();
-        return $this->index();
+        if (Product::find($id)->delete()) {
+            return response('OK', 200);
+        } else {
+            return response('ERROR', 404);
+        }
     }
 }

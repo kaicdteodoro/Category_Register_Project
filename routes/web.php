@@ -16,4 +16,4 @@ Route::get('/', function () {
 })->name('home');
 
 Route::resource('categories','CategoryController',['as'=>'']);
-Route::resource('products','ProductController',['as'=>'']);
+Route::get('products','ProductController@indexView')->name('products.indexView');
