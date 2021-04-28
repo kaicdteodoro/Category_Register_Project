@@ -20,17 +20,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-//        return view('category.index')->with('cat', Category::all());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('category.new');
+        return json_encode(Category::all());
     }
 
     /**
@@ -41,8 +31,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        Category::create(['name' => $request->nameCategory]);
-        return $this->index();
+        return json_encode(Category::create(['name' => $request->input('name')]));
     }
 
     /**
@@ -53,18 +42,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return view('category.update')->with('cat', Category::find($id));
+        return Category::find($id);
     }
 
     /**
@@ -76,8 +54,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Category::find($id)->fill(['name' => $request->nameCategory])->save();
-        return $this->index();
+        $cat = Category::find($id);
+        return $cat ? json_encode($cat->fill(['name' => $request->input('name')])) : response('Error', 404);
     }
 
     /**
@@ -88,8 +66,8 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        Category::find($id)->delete();
-        return $this->index();
+        $cat = Category::find($id);
+        return $cat ? $cat->delete() : response('Error', 404);
     }
 
     /**
