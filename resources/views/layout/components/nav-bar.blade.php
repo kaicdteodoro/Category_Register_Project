@@ -15,10 +15,10 @@
                 <a class="nav-link" href="{{route('home')}}">Home</a>
             </li>
             <li class="nav-item {{setActive('products.*')}}">
-                <a class="nav-link" href="{{route('products.indexView')}}">Produtos</a>
+                <a class="nav-link" href="{{route('products.home')}}">Produtos</a>
             </li>
             <li class="nav-item {{setActive('categories.*')}}">
-                <a class="nav-link" href="{{route('categories.index')}}">Categorias</a>
+                <a class="nav-link" href="{{route('categories.home')}}">Categorias</a>
             </li>
         </ul>
 

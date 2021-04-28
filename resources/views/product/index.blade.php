@@ -20,57 +20,62 @@
             </table>
         </div>
         <div class="card-footer">
-            <button class="btn-botton btn btn-primary btn-sm" onclick="newProduct()">Novo</button>
-        </div>
-    </div>
-    <div class="modal" tabindex="-1" role="dialog" id="dlgProducts">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form class="form-horizontal" id="formProduct">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="titleModal">aaa</h5>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" id="idProduct" class="form-control">
-                        <div class="form-group">
-                            <label for="nameProduct" class="control-label">Nome do Produto</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="nameProduct" id="nameProduct"
-                                       placeholder="Nome do produto">
-                            </div>
-                        </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"
+                    onclick="newProduct()">Adicionar
+            </button>
 
-                        <div class="form-group">
-                            <label for="priceProduct" class="control-label">Preço do Produto</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" name="priceProduct" id="priceProduct"
-                                       placeholder="Preço do produto">
+            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+                 aria-hidden="true" id="dlgProduct">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form class="form-horizontal" id="formProduct">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="titleModal"></h5>
                             </div>
-                        </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="idProduct" value="" class="form-control">
+                                <div class="form-group">
+                                    <label for="nameProduct" class="control-label">Nome do Produto</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="nameProduct" id="nameProduct"
+                                               placeholder="Nome do produto">
+                                    </div>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="stockProduct" class="control-label">Estoque do Produto</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" name="stockProduct" id="stockProduct"
-                                       placeholder="Estoque do produto">
-                            </div>
-                        </div>
+                                <div class="form-group">
+                                    <label for="priceProduct" class="control-label">Preço do Produto</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="priceProduct" id="priceProduct"
+                                               placeholder="Preço do produto">
+                                    </div>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="categoryProduct" class="control-label">Categoria do Produto</label>
-                            <div class="input-group">
-                                <select class="form-control" name="catProduct" id="categoryProduct"></select>
+                                <div class="form-group">
+                                    <label for="stockProduct" class="control-label">Estoque do Produto</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="stockProduct" id="stockProduct"
+                                               placeholder="Estoque do produto">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="categoryProduct" class="control-label">Categoria do Produto</label>
+                                    <div class="input-group">
+                                        <select class="form-control" name="catProduct" id="categoryProduct"></select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                                <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Salvar</button>
-                        <button type="cancel" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
+
 @endsection
 @section('javascript')
     <script type="text/javascript">
@@ -85,29 +90,36 @@
             $('#titleModal').empty();
             $('#titleModal').append('Cadastro de Produtos');
             $('#nameProduct').val('');
+            $('#idProduct').val('');
             $('#stockProduct').val('');
             $('#priceProduct').val('');
             $('#categoryProduct').val('');
-            $('#dlgProducts').modal('show');
         }
 
         opList = () => {
-            $.getJSON("{{route('categories.indexJson')}}", (data) => {
-                data.forEach((obj) => {
-                    $('#categoryProduct').append('<option value="' + obj.id + '">' + obj.name + '</option>');
+            $.getJSON("api/getCategory", (data) => {
+                data.forEach((element) => {
+                    $('#categoryProduct').append('<option value="' + element.id + '">' + element.name + '</option>');
                 });
-            })
+            });
         }
+getCategory = (id)=>{
+    return category = $('#categoryProduct>option').filter((i, element)=>{
+        return element.value == id;
+    });
+}
 
         makeLine = (obj) => {
+            category = getCategory(obj.category_id);
+
             var line = '<tr>' +
                 '<td>' + obj.id + '</td>' +
                 '<td>' + obj.name + '</td>' +
                 '<td>' + obj.price + '</td>' +
                 '<td>' + obj.stock + '</td>' +
-                '<td>' + obj.category_id + '</td>' +
+                 '<td>' + category[0].textContent +'</td>' +
                 '<td>' +
-                '<button class="btn btn-sm btn-primary" onClick="edit(' + obj.id + ')">Editar</button>' +
+                '<button class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" onClick="edit(' + obj.id + ')">Editar</button>' +
                 '<button class="btn btn-sm btn-danger" onClick="remove(' + obj.id + ')">Apagar</button>'
                 + '</td>'
                 + '</tr>';
@@ -132,7 +144,6 @@
                 $('#stockProduct').val(data.stock);
                 $('#priceProduct').val(data.price);
                 $('#categoryProduct').val(data.category_id);
-                $('#dlgProducts').modal('show');
             });
         }
 
@@ -142,11 +153,11 @@
                 url: "api/products/" + id,
                 context: this,
                 success: (message) => {
-                    elements = $("#tbProducts>tbody>tr");
-                    rm = elements.filter((i, element) => {
+//mexi aqui, se der erro foi isso, antes tava atribuindo o seletor do jquery pra variável rm
+                    elements = $("#tbProducts>tbody>tr").filter((i, element) => {
                         return element.cells[0].textContent == id;
                     });
-                    return rm.remove();
+                    return elements.remove();
                     console.log(message);
                 },
                 error: (error) => {
@@ -174,11 +185,12 @@
                     line = lines.filter((i, element) => {
                         return element.cells[0].textContent == prod.id;
                     });
-                    if(line){
+                    category = getCategory(prod.category_id);
+                    if (line) {
                         line[0].cells[1].textContent = prod.name;
                         line[0].cells[2].textContent = prod.price;
                         line[0].cells[3].textContent = prod.stock;
-                        line[0].cells[4].textContent = prod.category_id;
+                        line[0].cells[4].textContent = category[0].textContent;
                     }
                 },
                 error: (message) => {
@@ -195,19 +207,20 @@
                 category_id: $('#categoryProduct').val()
             }
             $.post("{{route('products.store')}}", prod, (data) => {
-                $('#tbProducts>tbody').append(makeLine(data));
+                product = JSON.parse(data);
+                $('#tbProducts>tbody').append(makeLine(product));
             });
         }
 
         $('#formProduct').submit((event) => {
             event.preventDefault();
-            $('#idProduct') ? updateProduct() : createProduct();
-            $('#dlgProducts').modal('hide')
+            $('#idProduct').val() == '' ? createProduct() : updateProduct();
+            $('#dlgProduct').modal('hide')
         });
 
         $(() => {
-            tdList();
             opList();
+            tdList();
         })
     </script>
 @endsection

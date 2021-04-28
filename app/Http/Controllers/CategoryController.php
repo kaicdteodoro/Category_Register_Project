@@ -13,9 +13,14 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function indexView()
+    {
+        return view('category.index');
+    }
+
     public function index()
     {
-        return view('category.index')->with('cat',Category::all());
+//        return view('category.index')->with('cat', Category::all());
     }
 
     /**
@@ -31,19 +36,19 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        Category::create(['name'=>$request->nameCategory]);
+        Category::create(['name' => $request->nameCategory]);
         return $this->index();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -54,31 +59,31 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-     return view('category.update')->with('cat',Category::find($id));
+        return view('category.update')->with('cat', Category::find($id));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        Category::find($id)->fill(['name'=>$request->nameCategory])->save();
+        Category::find($id)->fill(['name' => $request->nameCategory])->save();
         return $this->index();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -87,7 +92,13 @@ class CategoryController extends Controller
         return $this->index();
     }
 
-    public function indexJson(){
-        return json_encode(DB::table('categories')->select('name','id')->orderBy('name')->get());
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function requestJson()
+    {
+        return json_encode(DB::table('categories')->select('id', 'name')->orderBy('name')->get());
     }
 }
