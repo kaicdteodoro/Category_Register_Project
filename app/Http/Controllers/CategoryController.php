@@ -66,8 +66,8 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $cat = Category::find($id);
-        return $cat ? $cat->delete() : response('Error', 404);
+        $cat = Category::find($id)->delete();
+        return $cat ? response('OK', 200) : response('Error', 404);
     }
 
     /**

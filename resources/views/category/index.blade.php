@@ -1,4 +1,5 @@
 @extends('layout.app')
+@section('title','Categorias')
 @section('body')
     <div class="card border">
         <div class="card-body">
@@ -8,7 +9,7 @@
                 <tr>
                     <th>Código</th>
                     <th>Nome</th>
-                    <th>Opções</th>
+                    <th class="text-center">#</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -19,7 +20,6 @@
                         onclick="newCategory()">
                     Adicionar
                 </button>
-
                 <div class="modal fade bd-example-modal-lg" tabindex="-1" id="dlgCategory" role="dialog"
                      aria-labelledby="myLargeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
@@ -60,13 +60,13 @@
         });
         getTr = (category) => {
             line = "<tr>" +
-                "<td>" + category.id + "</td>" +
-                "<td>" + category.name + "</td>" +
-                "<td>" +
+                '<td>' + category.id + '</td>' +
+                '<td>' + category.name + '</td>' +
+                '<td class="text-center">' +
                 '<button class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" onClick="edit(' + category.id + ')">Editar</button>' +
                 '<button class="btn btn-sm btn-danger" onClick="remove(' + category.id + ')">Apagar</button>'
-                + "</td>" +
-                "</tr>";
+                + '</td>' +
+                '</tr>';
             return line;
         };
 
@@ -85,7 +85,7 @@
         newCategory = () => {
             $('#titleModal').empty();
             $('#titleModal').append('Cadastro de categorias');
-            $('#idCategory').val('')
+            $('#idCategory').empty();
             $('#nameCategory').val('')
         };
 
@@ -108,7 +108,7 @@
             cat = getCategory();
             $.ajax({
                 type: 'PUT',
-                url: 'api/products/' + cat.id,
+                url: 'api/categories/' + cat.id,
                 data: cat,
                 context: this,
                 success: (data) => {
@@ -132,12 +132,13 @@
                 type: "DELETE",
                 url: "api/categories/" + id,
                 context: this,
-                success: (data) => {
-                    category = JSON.parse(data);
-                    line = $('#tbCategories>tbody').filter((i, element) => {
-                        return element.cells[0].textContent == category.id;
+                success: (message) => {
+                    line = $('#tbCategories>tbody>tr').filter((i, element) => {
+                        return element.cells[0].textContent == id;
                     });
+                    console.log(message)
                     return line.remove();
+
                 },
                 error: (message) => {
                     console.log(message)
@@ -147,14 +148,14 @@
 
         createCategory = () => {
             cat = getCategory();
-            $.post('api/categories',cat, (data) => {
+            $.post('api/categories', cat, (data) => {
                 category = JSON.parse(data)
                 $('#tbCategories>tbody').append(getTr(category));
             });
         };
         $('#formCategory').submit((event) => {
             event.preventDefault();
-            return $('#idCategory').val() == "" ? createCategory() : updateCategory();
+            $('#idCategory').val() == '' ? createCategory() : updateCategory();
             $('#dlgCategory').modal('hide');
         })
 

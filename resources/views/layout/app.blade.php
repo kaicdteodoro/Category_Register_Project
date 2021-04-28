@@ -19,7 +19,7 @@
         }
     </style>
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
-    <title>Document</title>
+    <title>@yield('title')</title>
 </head>
 <body>
 <div class="container">

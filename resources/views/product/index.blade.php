@@ -1,4 +1,5 @@
 @extends('layout.app')
+@section('title','Produtos')
 @section('body')
     <div class="card border">
         <div class="card-body">
@@ -11,7 +12,7 @@
                     <th>Preço</th>
                     <th>Estoque</th>
                     <th>Categoria</th>
-                    <th>#</th>
+                    <th class="text-center">#</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -19,10 +20,18 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"
-                    onclick="newProduct()">Adicionar
-            </button>
+        <div class="card-footer container-sm">
+            <div class="row">
+                <div class="col-sm">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"
+                            onclick="newProduct()">Adicionar
+                    </button>
+                </div>
+                <div class="col-sm">
+                    <p class="text-danger text-sm-left">É necessário ao menos uma categoria cadastrada</p>
+                </div>
+
+            </div>
 
             <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
                  aria-hidden="true" id="dlgProduct">
@@ -103,11 +112,11 @@
                 });
             });
         }
-getCategory = (id)=>{
-    return category = $('#categoryProduct>option').filter((i, element)=>{
-        return element.value == id;
-    });
-}
+        getCategory = (id) => {
+            return category = $('#categoryProduct>option').filter((i, element) => {
+                return element.value == id;
+            });
+        }
 
         makeLine = (obj) => {
             category = getCategory(obj.category_id);
@@ -117,8 +126,8 @@ getCategory = (id)=>{
                 '<td>' + obj.name + '</td>' +
                 '<td>' + obj.price + '</td>' +
                 '<td>' + obj.stock + '</td>' +
-                 '<td>' + category[0].textContent +'</td>' +
-                '<td>' +
+                '<td>' + category[0].textContent + '</td>' +
+                '<td class="text-center">' +
                 '<button class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" onClick="edit(' + obj.id + ')">Editar</button>' +
                 '<button class="btn btn-sm btn-danger" onClick="remove(' + obj.id + ')">Apagar</button>'
                 + '</td>'
